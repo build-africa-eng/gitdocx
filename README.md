@@ -16,11 +16,11 @@
 ### Pull from Docker Hub
 
 ```bash```
-docker pull africanfuture/gitdocx:latest
+```docker pull africanfuture/gitdocx:latest```
 
-Or from GitHub Container Registry:
+```Or from GitHub Container Registry:```
 
-docker pull ghcr.io/africanfuture/gitdocx:latest
+```docker pull ghcr.io/africanfuture/gitdocx:latest```
 
 
 ---
