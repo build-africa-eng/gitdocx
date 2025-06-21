@@ -13,7 +13,7 @@
 
 ## 📦 Usage
 
-### Pull from Docker Hub
+## Pull from Docker Hub
 
 ```bash
 docker pull africanfuture/gitdocx:latest
