@@ -17,6 +17,6 @@ target "windows" {
   cache-from = ["type=gha"]
   cache-to = ["type=gha,mode=max"]
   args = {
-    BASE_IMAGE = "mcr.microsoft.com/windows/servercore:ltsc2022"
+    BASE_IMAGE = "africanfuture/windows-devbox-base"
   }
 }
