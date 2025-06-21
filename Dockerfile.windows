@@ -1,17 +1,17 @@
-# Use the appropriate Windows base image
+# Use the custom Windows devbox base image
 FROM africanfuture/windows-devbox-base:latest
 
-# Set default shell to PowerShell
-SHELL ["powershell", "-Command"]
+# Use full PowerShell path to avoid missing executable issues
+SHELL ["C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "-Command"]
 
-# Optional: show available space
-RUN Write-Host "Checking disk space..."; \
-    $freeSpace = (Get-PSDrive C).Free / 1GB; \
-    Write-Host "Free space on C: $freeSpace GB"; \
+# Optional: check for available disk space
+RUN Write-Host "Checking disk space..."; `
+    $freeSpace = (Get-PSDrive C).Free / 1GB; `
+    Write-Host "Free space on C: $freeSpace GB"; `
     if ($freeSpace -lt 5) { throw 'Not enough space' }
 
-# Create a file using PowerShell
-RUN 'Hello from GitDocx Windows' | Out-File -Encoding ASCII C:\hello.txt
+# Create a test file to confirm execution
+RUN "Hello from GitDocx Windows" | Out-File -FilePath C:\hello.txt -Encoding ascii
 
-# Default command: interactive PowerShell session
-CMD ["powershell.exe"]
+# Default shell for container
+CMD ["C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"]
