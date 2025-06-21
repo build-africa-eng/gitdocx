@@ -1,6 +1,7 @@
 # gitdocx/action.yml
 name: GitDocx Enhanced Builder
-description: Set up Docker Buildx with QEMU, caching, secrets, and GitHub-Docker integration.
+description: Set up Docker Buildx with QEMU, caching, and bake support.
+
 inputs:
   dockerhub-username:
     description: Docker Hub username
@@ -12,10 +13,10 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set up QEMU (multi-arch builds)
+    - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
 
-    - name: Set up Buildx (enhanced)
+    - name: Set up Docker Buildx (Enhanced)
       uses: docker/setup-buildx-action@v3
       with:
         install: true
@@ -27,7 +28,7 @@ runs:
         buildkitd-flags: --debug
         use: true
 
-    - name: Log in to Docker Hub
+    - name: Docker Login
       uses: docker/login-action@v3
       with:
         username: ${{ inputs.dockerhub-username }}
