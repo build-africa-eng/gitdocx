@@ -1,4 +1,9 @@
-name: Test GitDocx with Cross-Platform Bake
+---
+
+### 🧪 `.github/workflows/test.yml` – CI with Bake
+
+```yaml
+name: GitDocx CI Build
 
 on:
   push:
@@ -6,7 +11,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Windows images require special runners or self-hosted
+    runs-on: ubuntu-latest  # Windows requires self-hosted
+
     steps:
       - uses: actions/checkout@v4
 
@@ -16,5 +22,5 @@ jobs:
           dockerhub-username: ${{ secrets.DOCKER_USERNAME }}
           dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Linux and Windows Images
+      - name: Bake Build (Linux + Windows)
         run: docker buildx bake --file bake.hcl --push
