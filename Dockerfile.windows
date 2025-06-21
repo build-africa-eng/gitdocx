@@ -1,0 +1,8 @@
+# escape=`
+FROM mcr.microsoft.com/windows/nanoserver:ltsc2022
+
+SHELL ["cmd", "/S", "/C"]
+
+RUN echo Hello from GitDocx Windows > C:\hello.txt
+
+CMD ["cmd.exe"]
