@@ -13,7 +13,7 @@
 
 ## 📦 Usage
 
-## Pull from Docker Hub
+### Pull from Docker Hub
 
 ```bash
 docker pull africanfuture/gitdocx:latest
@@ -23,7 +23,7 @@ Or from GitHub Container Registry:
 docker pull ghcr.io/africanfuture/gitdocx:latest
 
 
----
+___
 
 ## 🔧 Build Locally (Linux only)
 
