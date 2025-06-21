@@ -23,8 +23,7 @@ Or from GitHub Container Registry:
 docker pull ghcr.io/africanfuture/gitdocx:latest
 
 
-___
-
+---
 
 
 ## 🔧 Build Locally (Linux only)
