@@ -22,9 +22,7 @@ Or from GitHub Container Registry:
 
 docker pull ghcr.io/africanfuture/gitdocx:latest
 
-
 ---
-
 
 ## 🔧 Build Locally (Linux only)
 
@@ -37,11 +35,7 @@ Or for local dev:
 
 docker buildx bake --set linux.output=type=docker dev
 
-
 ---
-
-
-
 
 ## 📁 File Structure
 
@@ -51,12 +45,7 @@ bake.hcl – Buildx multi-platform config
 
 .github/workflows/ – CI automation for Linux builds
 
-
-
 ---
-
-
-
 
 ## 📤 Publish
 
@@ -66,12 +55,7 @@ Docker Hub
 
 GitHub Container Registry
 
-
-
 ---
-
-
-
 
 ## 📜 License
 
