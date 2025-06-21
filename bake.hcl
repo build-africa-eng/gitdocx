@@ -16,4 +16,7 @@ target "windows" {
   platforms = ["windows/amd64"]
   cache-from = ["type=gha"]
   cache-to = ["type=gha,mode=max"]
+  args = {
+    BASE_IMAGE = "mcr.microsoft.com/windows/servercore:ltsc2022"
+  }
 }
