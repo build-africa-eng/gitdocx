@@ -1,14 +1,14 @@
-# escape=`
 FROM africanfuture/windows-devbox-base:latest
 
-# Use PowerShell explicitly as the default shell for subsequent instructions
+# Force PowerShell as default shell
 SHELL ["powershell", "-Command"]
 
-# Copy the script (use valid Windows path separators)
-COPY check-space-and-write.ps1 C:\scripts\check-space-and-write.ps1
+# Make a scripts folder and copy script
+RUN New-Item -Path C:\\scripts -ItemType Directory -Force
+COPY check-space-and-write.ps1 C:\\scripts\\check-space-and-write.ps1
 
-# Run the script directly since PowerShell is already the default shell
-RUN C:\scripts\check-space-and-write.ps1
+# Run the script via PowerShell
+RUN powershell -ExecutionPolicy Bypass -File C:\\scripts\\check-space-and-write.ps1
 
-# Default command when the container starts
-CMD ["powershell"]
+# Default container entry point
+CMD ["powershell.exe"]
