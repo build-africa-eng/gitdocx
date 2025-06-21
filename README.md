@@ -31,12 +31,12 @@
 
 Ensure Buildx is enabled:
 
-''docker buildx create --use''
-''docker buildx bake --push''
+'''docker buildx create --use
+docker buildx bake --push'''
 
 Or for local dev:
 
-''docker buildx bake --set'' ''linux.output=type=docker dev''
+'''docker buildx bake --set linux.output=type=docker dev'''
 
 ---
 
