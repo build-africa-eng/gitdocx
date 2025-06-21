@@ -1,48 +1,91 @@
-### ✅ `.github/workflows/test.yml` – CI with Bake, SBOM, and Tagging
-
-name: GitDocx CI Build
+name: 🚀 GitDocx Linux CI Build & Publish
 
 on:
   push:
     branches: [main]
-
-env:
-  GIT_SHA: ${{ github.sha }}
+    tags:
+      - 'v*.*.*'  # e.g. v1.0.0
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Windows requires self-hosted
+    name: 🔨 Build and Push GitDocx Linux Image
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    strategy:
+      matrix:
+        platform: [linux/amd64, linux/arm64]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up GitDocx
-        uses: ./
+      - name: 🐳 Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: 🐳 Set up Buildx
+        uses: docker/setup-buildx-action@v3
         with:
-          dockerhub-username: ${{ secrets.DOCKER_USERNAME }}
-          dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
+          install: true
+          driver: docker-container
+          use: true
 
-      - name: Lint Dockerfile
-        uses: hadolint/hadolint-action@v3
-        with:
-          dockerfile: Dockerfile.linux
-
-      - name: Set metadata
-        run: echo "Built at $(date)" > build-info.txt
-
-      - name: Upload build metadata
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-info
-          path: build-info.txt
-
-      - name: Bake Build (Linux)
-        run: docker buildx bake --file bake.hcl --push --sbom=true --provenance=true
-
-      - name: Sync README to Docker Hub
-        uses: peter-evans/dockerhub-description@v3
+      - name: 🔐 DockerHub Login
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: africanfuture/gitdocx
-          readme-filepath: ./README.md
+
+      - name: 🔐 GitHub Container Registry Login (Optional)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🧪 Test Build Only (No Push on Non-Tags)
+        if: github.ref_type != 'tag'
+        run: |
+          docker buildx build \
+            --platform ${{ matrix.platform }} \
+            --file Dockerfile.linux \
+            --tag africanfuture/gitdocx:linux-${{ matrix.platform }} \
+            --load \
+            .
+
+          docker run --rm africanfuture/gitdocx:linux-${{ matrix.platform }} cat /hello.txt | grep "Hello"
+
+      - name: 🚀 Build & Push Tagged Release
+        if: github.ref_type == 'tag'
+        run: |
+          GIT_TAG=${GITHUB_REF##*/}
+          docker buildx build \
+            --platform ${{ matrix.platform }} \
+            --file Dockerfile.linux \
+            --push \
+            --tag africanfuture/gitdocx:${GIT_TAG}-${{ matrix.platform }} \
+            --tag africanfuture/gitdocx:latest \
+            --tag ghcr.io/africanfuture/gitdocx:${GIT_TAG}-${{ matrix.platform }} \
+            --cache-from=type=gha \
+            --cache-to=type=gha,mode=max \
+            .
+
+      - name: ✅ Slack Notification on Success
+        if: success() && github.ref_type == 'tag'
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: good
+          SLACK_MESSAGE: "✅ GitDocx ${GITHUB_REF##*/} built and pushed successfully."
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: 🚨 Discord Notification on Failure
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content":"🚨 GitDocx build failed on `${{ github.ref }}`"}' \
+            ${{ secrets.DISCORD_WEBHOOK }}
