@@ -20,7 +20,7 @@ docker pull africanfuture/gitdocx:latest
 
 Or from GitHub Container Registry:
 
-docker pull ghcr.io/africanfuture/gitdocx:latest
+docker pull ghcr.io/africanfuture/gitdocx:latest```
 
 
 ---
