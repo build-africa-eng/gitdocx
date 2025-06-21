@@ -22,6 +22,7 @@ Or from GitHub Container Registry:
 
 docker pull ghcr.io/africanfuture/gitdocx:latest
 
+
 ---
 
 ## 🔧 Build Locally (Linux only)
@@ -37,6 +38,7 @@ docker buildx bake --set linux.output=type=docker dev
 
 ---
 
+
 ## 📁 File Structure
 
 Dockerfile.linux – Linux image definition
@@ -47,6 +49,7 @@ bake.hcl – Buildx multi-platform config
 
 ---
 
+
 ## 📤 Publish
 
 This repo automatically builds and pushes images to:
@@ -56,6 +59,7 @@ Docker Hub
 GitHub Container Registry
 
 ---
+
 
 ## 📜 License
 
