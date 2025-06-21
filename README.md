@@ -32,7 +32,7 @@
 Ensure Buildx is enabled:
 
 ``docker buildx create --use
-docker buildx bake --push''
+docker buildx bake --push``
 
 Or for local dev:
 
