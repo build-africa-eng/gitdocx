@@ -1,21 +1,19 @@
-# gitdocx/bake.hcl
-
 group "default" {
-  targets = ["base", "full"]
+  targets = ["linux", "windows"]
 }
 
-target "base" {
-  dockerfile = "Dockerfile.base"
-  tags = ["youruser/gitdocx-base:latest"]
+target "linux" {
+  dockerfile = "Dockerfile.linux"
+  tags = ["africanfuture/gitdocx:linux"]
   platforms = ["linux/amd64", "linux/arm64"]
   cache-from = ["type=gha"]
   cache-to = ["type=gha,mode=max"]
 }
 
-target "full" {
-  dockerfile = "Dockerfile"
-  tags = ["youruser/gitdocx:latest"]
-  platforms = ["linux/amd64", "linux/arm64"]
+target "windows" {
+  dockerfile = "Dockerfile.windows"
+  tags = ["africanfuture/gitdocx:windows"]
+  platforms = ["windows/amd64"]
   cache-from = ["type=gha"]
   cache-to = ["type=gha,mode=max"]
 }
