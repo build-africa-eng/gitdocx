@@ -1,8 +1,5 @@
----
-
 ### 🧪 `.github/workflows/test.yml` – CI with Bake
 
-```yaml
 name: GitDocx CI Build
 
 on:
