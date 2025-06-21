@@ -1,13 +1,13 @@
 FROM africanfuture/windows-devbox-base:latest
 
-# Copy the script into the image
-COPY check-space-and-write.ps1 C:\scripts\check-space-and-write.ps1
-
 # Use PowerShell explicitly
-SHELL ["C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "-Command"]
+SHELL ["powershell", "-Command"]
+
+# Copy the script (use valid Windows path separators)
+COPY check-space-and-write.ps1 C:\\scripts\\check-space-and-write.ps1
 
 # Run the script
-RUN C:\scripts\check-space-and-write.ps1
+RUN C:\\scripts\\check-space-and-write.ps1
 
-# Default shell when running container
-CMD ["C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"]
+# Default command when the container starts
+CMD ["powershell"]
