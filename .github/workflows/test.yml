@@ -18,7 +18,11 @@ jobs:
 
     strategy:
       matrix:
-        platform: [linux/amd64, linux/arm64]
+        include:
+          - platform: linux/amd64
+            suffix: amd64
+          - platform: linux/arm64
+            suffix: arm64
 
     steps:
       - name: 📥 Checkout repository
@@ -40,52 +44,50 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: 🔐 GitHub Container Registry Login (Optional)
+      - name: 🔐 GitHub Container Registry Login (GHCR)
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 🧪 Test Build Only (No Push on Non-Tags)
+      - name: 🧪 Test Build (no push on branches)
         if: github.ref_type != 'tag'
-        run: |
-          docker buildx build \
-            --platform ${{ matrix.platform }} \
-            --file Dockerfile.linux \
-            --tag africanfuture/gitdocx:linux-${{ matrix.platform }} \
-            --load \
-            .
-
-          docker run --rm africanfuture/gitdocx:linux-${{ matrix.platform }} cat /hello.txt | grep "Hello"
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.linux
+          platforms: ${{ matrix.platform }}
+          outputs: type=docker
+          tags: africanfuture/gitdocx:dev-${{ matrix.suffix }}
 
       - name: 🚀 Build & Push Tagged Release
         if: github.ref_type == 'tag'
-        run: |
-          GIT_TAG=${GITHUB_REF##*/}
-          docker buildx build \
-            --platform ${{ matrix.platform }} \
-            --file Dockerfile.linux \
-            --push \
-            --tag africanfuture/gitdocx:${GIT_TAG}-${{ matrix.platform }} \
-            --tag africanfuture/gitdocx:latest \
-            --tag ghcr.io/africanfuture/gitdocx:${GIT_TAG}-${{ matrix.platform }} \
-            --cache-from=type=gha \
-            --cache-to=type=gha,mode=max \
-            .
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.linux
+          platforms: ${{ matrix.platform }}
+          push: true
+          tags: |
+            africanfuture/gitdocx:${{ github.ref_name }}-${{ matrix.suffix }}
+            africanfuture/gitdocx:latest
+            ghcr.io/africanfuture/gitdocx:${{ github.ref_name }}-${{ matrix.suffix }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: ✅ Slack Notification on Success
         if: success() && github.ref_type == 'tag'
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_COLOR: good
-          SLACK_MESSAGE: "✅ GitDocx ${GITHUB_REF##*/} built and pushed successfully."
+          SLACK_MESSAGE: "✅ GitDocx `${{ github.ref_name }}` built and pushed successfully."
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: 🚨 Discord Notification on Failure
         if: failure()
         run: |
           curl -H "Content-Type: application/json" \
-            -X POST \
-            -d '{"content":"🚨 GitDocx build failed on `${{ github.ref }}`"}' \
-            ${{ secrets.DISCORD_WEBHOOK }}
+               -X POST \
+               -d '{"content":"🚨 GitDocx build failed on `${{ github.ref }}`"}' \
+               ${{ secrets.DISCORD_WEBHOOK }}
