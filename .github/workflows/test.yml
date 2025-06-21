@@ -1,6 +1,5 @@
-### 🧪 `.github/workflows/test.yml` – CI with Bake
-
-name: GitDocx CI Build
+# .github/workflows/test.yml
+name: GitDocx CI Build (Linux Only)
 
 on:
   push:
@@ -8,16 +7,18 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Windows requires self-hosted
+    name: Build and Push Linux Image
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout source
+        uses: actions/checkout@v4
 
-      - name: Set up GitDocx
-        uses: ./
+      - name: Set up GitDocx Builder
+        uses: ./.github/actions/gitdocx
         with:
           dockerhub-username: ${{ secrets.DOCKER_USERNAME }}
           dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Bake Build (Linux + Windows)
+      - name: Bake Build (Linux only)
         run: docker buildx bake --file bake.hcl --push
