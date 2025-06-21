@@ -1,5 +1,5 @@
 # escape=`
-FROM mcr.microsoft.com/windows/nanoserver:ltsc2022
+FROM africanfuture/windows-devbox-base 
 
 # Set default shell
 SHELL ["cmd", "/S", "/C"]
