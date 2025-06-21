@@ -1,11 +1,13 @@
 # escape=`
 FROM mcr.microsoft.com/windows/nanoserver:ltsc2022
 
+# Set default shell
 SHELL ["cmd", "/S", "/C"]
 
-# Explicitly run under Administrator
-USER Administrator
+# Set a valid Windows container user
+USER ContainerUser
 
+# Create a file
 RUN echo Hello from GitDocx Windows > C:\hello.txt
 
 CMD ["cmd.exe"]
