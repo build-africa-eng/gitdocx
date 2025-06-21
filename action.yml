@@ -1,4 +1,4 @@
-# gitdocx/action.yml
+# .github/actions/gitdocx/action.yml
 name: GitDocx Enhanced Builder
 description: Set up Docker Buildx with QEMU, caching, and bake support.
 
