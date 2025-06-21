@@ -1,11 +1,17 @@
-# escape=`
+# Use the appropriate Windows base image
 FROM africanfuture/windows-devbox-base:latest
 
-SHELL ["cmd", "/S", "/C"]
+# Set default shell to PowerShell
+SHELL ["powershell", "-Command"]
 
-# (no USER line here—use whatever the base image already has)
+# Optional: show available space
+RUN Write-Host "Checking disk space..."; \
+    $freeSpace = (Get-PSDrive C).Free / 1GB; \
+    Write-Host "Free space on C: $freeSpace GB"; \
+    if ($freeSpace -lt 5) { throw 'Not enough space' }
 
-# Create the file
-RUN echo Hello from GitDocx Windows > C:\hello.txt
+# Create a file using PowerShell
+RUN 'Hello from GitDocx Windows' | Out-File -Encoding ASCII C:\hello.txt
 
-CMD ["cmd.exe"]
+# Default command: interactive PowerShell session
+CMD ["powershell.exe"]
