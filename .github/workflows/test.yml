@@ -1,0 +1,20 @@
+name: Test GitDocx with Cross-Platform Bake
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Windows images require special runners or self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up GitDocx
+        uses: ./
+        with:
+          dockerhub-username: ${{ secrets.DOCKER_USERNAME }}
+          dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Linux and Windows Images
+        run: docker buildx bake --file bake.hcl --push
