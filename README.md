@@ -16,7 +16,7 @@
 ### Pull from Docker Hub
 
 ```bash```
-```docker pull africanfuture/gitdocx:latest```
+*```docker pull africanfuture/gitdocx:latest```*
 
 ```Or from GitHub Container Registry:```
 
@@ -27,7 +27,7 @@
 
 
 
-# 🔧 Build Locally (Linux only)
+## 🔧 Build Locally (Linux only)
 
 Ensure Buildx is enabled:
 
@@ -42,7 +42,7 @@ docker buildx bake --set linux.output=type=docker dev
 
 
 
-📁 File Structure
+## 📁 File Structure
 
 Dockerfile.linux – Linux image definition
 
@@ -53,7 +53,7 @@ bake.hcl – Buildx multi-platform config
 ---
 
 
-📤 Publish
+## 📤 Publish
 
 This repo automatically builds and pushes images to:
 
@@ -64,7 +64,7 @@ GitHub Container Registry
 ---
 
 
-📜 License
+## 📜 License
 
 MIT © African Future
 
