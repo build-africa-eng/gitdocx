@@ -25,6 +25,8 @@ docker pull ghcr.io/africanfuture/gitdocx:latest
 
 ---
 
+
+
 🔧 Build Locally (Linux only)
 
 Ensure Buildx is enabled:
@@ -37,6 +39,7 @@ Or for local dev:
 docker buildx bake --set linux.output=type=docker dev
 
 ---
+
 
 
 📁 File Structure
