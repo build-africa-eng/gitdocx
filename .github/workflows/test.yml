@@ -1,24 +1,48 @@
-# .github/workflows/test.yml
-name: GitDocx CI Build (Linux Only)
+### ✅ `.github/workflows/test.yml` – CI with Bake, SBOM, and Tagging
+
+name: GitDocx CI Build
 
 on:
   push:
     branches: [main]
 
+env:
+  GIT_SHA: ${{ github.sha }}
+
 jobs:
   build:
-    name: Build and Push Linux Image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Windows requires self-hosted
 
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up GitDocx Builder
-        uses: ./.github/actions/gitdocx
+      - name: Set up GitDocx
+        uses: ./
         with:
           dockerhub-username: ${{ secrets.DOCKER_USERNAME }}
           dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Bake Build (Linux only)
-        run: docker buildx bake --file bake.hcl --push
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3
+        with:
+          dockerfile: Dockerfile.linux
+
+      - name: Set metadata
+        run: echo "Built at $(date)" > build-info.txt
+
+      - name: Upload build metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-info
+          path: build-info.txt
+
+      - name: Bake Build (Linux)
+        run: docker buildx bake --file bake.hcl --push --sbom=true --provenance=true
+
+      - name: Sync README to Docker Hub
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: africanfuture/gitdocx
+          readme-filepath: ./README.md
