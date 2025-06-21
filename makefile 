@@ -1,0 +1,22 @@
+IMAGE=africanfuture/gitdocx
+TAG=dev
+PLATFORMS=linux/amd64,linux/arm64
+
+build:
+	docker buildx bake
+
+build-dev:
+	docker buildx bake \
+		--set linux.tags=$(IMAGE):$(TAG) \
+		--set linux.output=type=docker
+
+push:
+	docker buildx bake \
+		--set linux.tags=$(IMAGE):$(TAG) \
+		--push
+
+release:
+	docker buildx bake \
+		--set linux.tags=$(IMAGE):latest \
+		--set linux.tags=$(IMAGE):$(shell git describe --tags --abbrev=0) \
+		--push
