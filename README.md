@@ -15,8 +15,8 @@
 
 ### Pull from Docker Hub
 
-# ```bash```
-*```docker pull africanfuture/gitdocx:latest```*
+```bash```
+**```docker pull africanfuture/gitdocx:latest```**
 
 ```Or from GitHub Container Registry:```
 
