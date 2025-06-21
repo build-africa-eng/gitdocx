@@ -1,14 +1,11 @@
 # escape=`
-FROM africanfuture/windows-devbox-base 
+FROM africanfuture/windows-devbox-base:latest
 
-# Use Windows native shell
 SHELL ["cmd", "/S", "/C"]
 
-# Use ContainerAdministrator to avoid ContainerUser issue in CI
-USER ContainerAdministrator
+# (no USER line here—use whatever the base image already has)
 
-# Simple output to confirm build
+# Create the file
 RUN echo Hello from GitDocx Windows > C:\hello.txt
 
-# Default command
 CMD ["cmd.exe"]
