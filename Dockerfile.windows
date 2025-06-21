@@ -1,15 +1,13 @@
-# Use your base image
 FROM africanfuture/windows-devbox-base:latest
 
-# Set default shell to PowerShell
+# Copy the script into the image
+COPY check-space-and-write.ps1 C:\scripts\check-space-and-write.ps1
+
+# Use PowerShell explicitly
 SHELL ["C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "-Command"]
 
-# Step: Check disk space and write file (one RUN block, properly quoted)
-RUN "Write-Host 'Checking disk space...'; `n" `
-    + "$freeSpace = (Get-PSDrive C).Free / 1GB; `n" `
-    + "Write-Host 'Free space on C: ' $freeSpace 'GB'; `n" `
-    + "if ($freeSpace -lt 5) { throw 'Not enough space' }; `n" `
-    + "'Hello from GitDocx Windows' | Out-File -FilePath C:\\hello.txt -Encoding ascii"
+# Run the script
+RUN C:\scripts\check-space-and-write.ps1
 
-# Set default startup command
+# Default shell when running container
 CMD ["C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"]
