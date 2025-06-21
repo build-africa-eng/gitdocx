@@ -27,7 +27,7 @@
 
 
 
-🔧 Build Locally (Linux only)
+# 🔧 Build Locally (Linux only)
 
 Ensure Buildx is enabled:
 
