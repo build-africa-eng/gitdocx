@@ -4,8 +4,8 @@ FROM africanfuture/windows-devbox-base
 # Use Windows native shell
 SHELL ["cmd", "/S", "/C"]
 
-# Use Administrator to avoid ContainerUser issue in CI
-USER Administrator
+# Use ContainerAdministrator to avoid ContainerUser issue in CI
+USER ContainerAdministrator
 
 # Simple output to confirm build
 RUN echo Hello from GitDocx Windows > C:\hello.txt
