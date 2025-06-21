@@ -1,17 +1,15 @@
-# Start from your base image
+# Use your base image
 FROM africanfuture/windows-devbox-base:latest
 
-# Use full PowerShell path as the default shell
+# Set default shell to PowerShell
 SHELL ["C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "-Command"]
 
-# Step 1: Check disk space
-RUN Write-Host "Checking disk space..." `
-    ; $freeSpace = (Get-PSDrive C).Free / 1GB `
-    ; Write-Host "Free space on C: $freeSpace GB" `
-    ; if ($freeSpace -lt 5) { throw 'Not enough space' }
+# Step: Check disk space and write file (one RUN block, properly quoted)
+RUN "Write-Host 'Checking disk space...'; `n" `
+    + "$freeSpace = (Get-PSDrive C).Free / 1GB; `n" `
+    + "Write-Host 'Free space on C: ' $freeSpace 'GB'; `n" `
+    + "if ($freeSpace -lt 5) { throw 'Not enough space' }; `n" `
+    + "'Hello from GitDocx Windows' | Out-File -FilePath C:\\hello.txt -Encoding ascii"
 
-# Step 2: Write a simple file
-RUN "Hello from GitDocx Windows" | Out-File -FilePath C:\hello.txt -Encoding ascii
-
-# Default command when container starts
+# Set default startup command
 CMD ["C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"]
