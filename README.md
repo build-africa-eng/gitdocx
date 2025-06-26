@@ -1,4 +1,4 @@
-### GitDocx
+# GitDocx
 
 ___
 
@@ -19,11 +19,11 @@ GitDocx is a cross-platform document automation builder using Git-powered workfl
 
 
 
-### 📦Usage
+# 📦Usage
 
 ___
 
-# Pull from Docker Hub:
+## Pull from Docker Hub:
 
 >docker pull africanfuture/gitdocx:latest
 
@@ -35,7 +35,7 @@ ___
 
 
 
-# 🔧 Build Locally (Linux only)
+## 🔧 Build Locally (Linux only)
 
 Ensure Buildx is enabled:
 >docker buildx create --use
@@ -52,7 +52,7 @@ ___
 
 
 
-# 📁 File Structure
+## 📁 File Structure
 
 Dockerfile.linux – Linux image definition
 
@@ -69,7 +69,7 @@ ___
 
 
 
-# 📤 Publish
+## 📤 Publish
 
 This repository automatically builds and pushes images to:
 
@@ -81,7 +81,7 @@ ___
 
 
 
-# 📜 License
+## 📜 License
 
 >MIT © African Future
 
