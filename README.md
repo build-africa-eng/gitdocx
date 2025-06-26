@@ -1,10 +1,16 @@
 ## GitDocx
 GitDocx is a cross-platform document automation builder using Git-powered workflows and Docker Buildx.
+
 🚀 Features
+
 ✅ Linux/amd64 and arm64 builds
+
 🔁 GitHub Actions CI with Buildx Bake
+
 🐋 Docker Hub + GHCR multi-registry publishing
+
 ⚡ Caching with GitHub Actions (gha) cache driver
+
 
 ___
 
@@ -16,6 +22,7 @@ ___
 ___
 
 ## Pull from Docker Hub:
+
 >docker pull africanfuture/gitdocx:latest
 
 
@@ -27,6 +34,7 @@ ___
 
 
 ## 🔧 Build Locally (Linux only)
+
 Ensure Buildx is enabled:
 >docker buildx create --use
 
@@ -43,12 +51,27 @@ ___
 
 
 ## 📁 File Structure
+
 Dockerfile.linux – Linux image definition
+
+
 Dockerfile.windows – Windows image definition
+
+
 bake.hcl – Buildx multi-platform config
+
+
 .github/workflows/ – CI automation for Linux & Windows builds
-📤 Publish
+
+___
+
+
+
+## 📤 Publish
+
 This repository automatically builds and pushes images to:
+
+
 >Docker Hub
 >GitHub Container Registry
 
@@ -57,6 +80,7 @@ ___
 
 
 ## 📜 License
+
 >MIT © African Future
 
 ___
