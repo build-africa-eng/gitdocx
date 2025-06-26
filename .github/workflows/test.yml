@@ -1,4 +1,4 @@
-name: 🚀 GitDocx Linux CI Build & Publish
+name: 🚀 GitDocx Linux & Windows CI Build & Publish
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - 'v*.*.*'  # e.g. v1.0.0
 
 jobs:
-  build:
+  build-linux:
     name: 🔨 Build and Push GitDocx Linux Image
     runs-on: ubuntu-latest
 
@@ -81,7 +81,51 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_COLOR: good
-          SLACK_MESSAGE: "✅ GitDocx `${{ github.ref_name }}` built and pushed successfully."
+          SLACK_MESSAGE: "✅ GitDocx `${{ github.ref_name }}` (Linux) built and pushed successfully."
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+  build-windows:
+    name: 🪟 Build GitDocx Windows Image
+    runs-on: windows-2019
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐳 DockerHub Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: 🔐 GitHub Container Registry Login (GHCR)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🧪 Test Build (Windows, no push on branches)
+        if: github.ref_type != 'tag'
+        run: |
+          docker build -f Dockerfile.windows -t africanfuture/gitdocx:win-dev .
+
+      - name: 🚀 Build & Push Tagged Release (Windows)
+        if: github.ref_type == 'tag'
+        run: |
+          docker build -f Dockerfile.windows -t africanfuture/gitdocx:${{ github.ref_name }}-windows .
+          docker tag africanfuture/gitdocx:${{ github.ref_name }}-windows ghcr.io/africanfuture/gitdocx:${{ github.ref_name }}-windows
+          docker tag africanfuture/gitdocx:${{ github.ref_name }}-windows africanfuture/gitdocx:windows-latest
+          docker push africanfuture/gitdocx:${{ github.ref_name }}-windows
+          docker push africanfuture/gitdocx:windows-latest
+          docker push ghcr.io/africanfuture/gitdocx:${{ github.ref_name }}-windows
+
+      - name: ✅ Slack Notification on Success
+        if: success() && github.ref_type == 'tag'
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: good
+          SLACK_MESSAGE: "✅ GitDocx `${{ github.ref_name }}` (Windows) built and pushed successfully."
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: 🚨 Discord Notification on Failure
@@ -89,5 +133,5 @@ jobs:
         run: |
           curl -H "Content-Type: application/json" \
                -X POST \
-               -d '{"content":"🚨 GitDocx build failed on `${{ github.ref }}`"}' \
+               -d '{"content":"🚨 GitDocx Windows build failed on `${{ github.ref }}`"}' \
                ${{ secrets.DISCORD_WEBHOOK }}
