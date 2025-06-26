@@ -1,5 +1,4 @@
-## GitDocx
-___
+## GitDocx___
 
 
 
