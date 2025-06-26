@@ -1,15 +1,15 @@
  escape=`
 FROM africanfuture/windows-devbox-base:latest
 
- Use PowerShell explicitly with its full path for the default shell
+# Use PowerShell explicitly with its full path for the default shell
 SHELL ["C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "-Command"]
 
- Make a scripts folder and copy script
+# Make a scripts folder and copy script
 RUN New-Item -Path C:\scripts -ItemType Directory -Force
 COPY check-space-and-write.ps1 C:\scripts\check-space-and-write.ps1
 
- Run the script
+# Run the script
 RUN C:\scripts\check-space-and-write.ps1
 
- Default command when the container starts
+# Default command when the container starts
 CMD ["powershell"]
