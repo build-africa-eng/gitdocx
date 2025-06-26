@@ -1,4 +1,6 @@
-## GitDocx___
+### GitDocx
+
+___
 
 
 
@@ -13,8 +15,6 @@ GitDocx is a cross-platform document automation builder using Git-powered workfl
 🐋 Docker Hub + GHCR multi-registry publishing
 
 ⚡ Caching with GitHub Actions (gha) cache driver
-
-
 
 
 
