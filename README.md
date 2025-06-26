@@ -1,4 +1,8 @@
 ## GitDocx
+___
+
+
+
 GitDocx is a cross-platform document automation builder using Git-powered workflows and Docker Buildx.
 
 🚀 Features
@@ -12,7 +16,6 @@ GitDocx is a cross-platform document automation builder using Git-powered workfl
 ⚡ Caching with GitHub Actions (gha) cache driver
 
 
-___
 
 
 
