@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-linux:
-    name: 🔨 Build and Push GitDocx Linux Image
+    name: 🔨 Build & Push GitDocx (Linux)
     runs-on: ubuntu-latest
 
     permissions:
@@ -76,7 +76,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: ✅ Slack Notification on Success
+      - name: ✅ Slack Notification on Success (Linux)
         if: success() && github.ref_type == 'tag'
         uses: rtCamp/action-slack-notify@v2
         env:
@@ -84,15 +84,22 @@ jobs:
           SLACK_MESSAGE: "✅ GitDocx `${{ github.ref_name }}` (Linux) built and pushed successfully."
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
+      - name: 🚨 Discord Notification on Failure (Linux)
+        if: failure()
+        run: |
+          $uri = '${{ secrets.DISCORD_WEBHOOK }}'
+          $json = '{ "content": "🚨 GitDocx Linux build failed on `${{ github.ref_name }}`" }'
+          curl.exe -H "Content-Type: application/json" -d "$json" $uri
+
   build-windows:
-    name: 🪟 Build GitDocx Windows Image
+    name: 🪟 Build & Push GitDocx (Windows)
     runs-on: windows-2019
 
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🐳 DockerHub Login
+      - name: 🔐 DockerHub Login
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -105,7 +112,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 🧪 Test Build (Windows, no push on branches)
+      - name: 🧪 Test Build (no push on branches)
         if: github.ref_type != 'tag'
         run: |
           docker build -f Dockerfile.windows -t africanfuture/gitdocx:win-dev .
@@ -120,18 +127,10 @@ jobs:
           docker push africanfuture/gitdocx:windows-latest
           docker push ghcr.io/africanfuture/gitdocx:${{ github.ref_name }}-windows
 
-      - name: ✅ Slack Notification on Success
-        if: success() && github.ref_type == 'tag'
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_COLOR: good
-          SLACK_MESSAGE: "✅ GitDocx `${{ github.ref_name }}` (Windows) built and pushed successfully."
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-
-      - name: 🚨 Discord Notification on Failure
+      - name: 🚨 Discord Notification on Failure (Windows)
         if: failure()
+        shell: pwsh
         run: |
-         $headers = @{ "Content-Type" = "application/json" }
-         $body = @{ content = "🚨 GitDocx Windows build failed on `${{ github.ref }}`" } | ConvertTo-Json -Compress
-         Invoke-RestMethod -Uri "${{ secrets.DISCORD_WEBHOOK }}" -Method Post -Headers $headers -Body $body
-
+          $headers = @{ "Content-Type" = "application/json" }
+          $body = @{ content = "🚨 GitDocx Windows build failed on `${{ github.ref_name }}`" } | ConvertTo-Json -Compress
+          Invoke-RestMethod -Uri "${{ secrets.DISCORD_WEBHOOK }}" -Method Post -Headers $headers -Body $body
