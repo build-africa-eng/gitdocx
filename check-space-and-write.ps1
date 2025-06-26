@@ -7,5 +7,5 @@ if ($fs -lt 5) {
     exit 1
 }
 
-"Hello from GitDocx Windows" | Out-File -FilePath C:\hello.txt -Encoding ASCII
-Write-Host "Successfully created C:\\hello.txt"
+"Hello from GitDocx Windows" | Out-File -FilePath 'C:\hello.txt' -Encoding ASCII
+Write-Host 'Successfully created C:\hello.txt'
