@@ -1,4 +1,4 @@
- escape=`
+# escape=`
 FROM africanfuture/windows-devbox-base:latest
 
 # Use PowerShell explicitly with its full path for the default shell
