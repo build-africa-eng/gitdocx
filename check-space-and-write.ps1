@@ -8,4 +8,4 @@ if ($fs -lt 5) {
 }
 
 "Hello from GitDocx Windows" | Out-File -FilePath C:\hello.txt -Encoding ASCII
-Write-Host "Successfully created C:\hello.txt"
+Write-Host "Successfully created C:\\hello.txt"
