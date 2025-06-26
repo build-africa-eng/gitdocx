@@ -87,9 +87,10 @@ jobs:
       - name: 🚨 Discord Notification on Failure (Linux)
         if: failure()
         run: |
-          $uri = '${{ secrets.DISCORD_WEBHOOK }}'
-          $json = '{ "content": "🚨 GitDocx Linux build failed on `${{ github.ref_name }}`" }'
-          curl.exe -H "Content-Type: application/json" -d "$json" $uri
+          curl -H "Content-Type: application/json" \
+          -d '{ "content": "🚨 GitDocx Linux build failed on `${{ github.ref_name }}`" }' \
+          "${{ secrets.DISCORD_WEBHOOK }}"
+        shell: bash
 
   build-windows:
     name: 🪟 Build & Push GitDocx (Windows)
@@ -132,5 +133,5 @@ jobs:
         shell: pwsh
         run: |
           $headers = @{ "Content-Type" = "application/json" }
-          $body = @{ content = "🚨 GitDocx Windows build failed on `${{ github.ref_name }}`" } | ConvertTo-Json -Compress
+          $body = @{ content = "🚨 GitDocx Windows build failed on ${{ github.ref_name }}" } | ConvertTo-Json -Compress
           Invoke-RestMethod -Uri "${{ secrets.DISCORD_WEBHOOK }}" -Method Post -Headers $headers -Body $body
