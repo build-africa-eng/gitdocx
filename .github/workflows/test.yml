@@ -131,7 +131,7 @@ jobs:
       - name: 🚨 Discord Notification on Failure
         if: failure()
         run: |
-          curl -H "Content-Type: application/json" \
-               -X POST \
-               -d '{"content":"🚨 GitDocx Windows build failed on `${{ github.ref }}`"}' \
-               ${{ secrets.DISCORD_WEBHOOK }}
+         $headers = @{ "Content-Type" = "application/json" }
+         $body = @{ content = "🚨 GitDocx Windows build failed on `${{ github.ref }}`" } | ConvertTo-Json -Compress
+         Invoke-RestMethod -Uri "${{ secrets.DISCORD_WEBHOOK }}" -Method Post -Headers $headers -Body $body
+
