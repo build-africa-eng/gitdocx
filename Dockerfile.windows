@@ -2,20 +2,23 @@ FROM africanfuture/windows-devbox-base:latest
 
 SHELL ["C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "-Command"]
 
+# Create scripts folder
 RUN New-Item -Path C:\scripts -ItemType Directory -Force
 
-RUN @"
-Write-Host "Checking disk space..."
-$fs = (Get-PSDrive C).Free / 1GB
-Write-Host "Free space on C: $($fs) GB"
+# Write the PowerShell script to file
+RUN Set-Content -Path C:\scripts\check-space-and-write.ps1 -Value `
+"Write-Host 'Checking disk space...'" + `
+"`$fs = (Get-PSDrive C).Free / 1GB" + `
+"Write-Host 'Free space on C: $($fs) GB'" + `
+"if (`$fs -lt 5) {" + `
+"  Write-Error 'Not enough disk space — require at least 5 GB'" + `
+"  exit 1" + `
+"}" + `
+"'Hello from GitDocx Windows' | Out-File -FilePath 'C:\hello.txt' -Encoding ASCII" + `
+"Write-Host 'Successfully created C:\hello.txt'"
 
-if ($fs -lt 5) {
-    Write-Error "Not enough disk space — require at least 5 GB"
-    exit 1
-}
-
-"Hello from GitDocx Windows" | Out-File -FilePath 'C:\hello.txt' -Encoding ASCII
-Write-Host 'Successfully created C:\hello.txt'
-"@ | Out-File -FilePath C:\scripts\check-space-and-write.ps1 -Encoding ASCII
-
+# Run the script
 RUN C:\scripts\check-space-and-write.ps1
+
+# Default shell
+CMD ["powershell"]
